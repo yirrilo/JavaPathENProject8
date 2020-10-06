@@ -9,6 +9,7 @@ public class Application {
 
     public static void main(String[] args) {
         Locale.setDefault(Locale.US);
+        SpringApplication.run(Application.class, args);
     }
 
 }
