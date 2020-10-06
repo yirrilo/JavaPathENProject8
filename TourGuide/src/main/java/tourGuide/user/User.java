@@ -8,95 +8,217 @@ import java.util.UUID;
 import gpsUtil.location.VisitedLocation;
 import tripPricer.Provider;
 
+/**
+ * The domain class User contains all data of TourGuide users.
+ *
+ * @author TripMaster
+ * @author Thierry Schreiner
+ */
 public class User {
-	private final UUID userId;
-	private final String userName;
-	private String phoneNumber;
-	private String emailAddress;
-	private Date latestLocationTimestamp;
-	private List<VisitedLocation> visitedLocations = new ArrayList<>();
-	private List<UserReward> userRewards = new ArrayList<>();
-	private UserPreferences userPreferences = new UserPreferences();
-	private List<Provider> tripDeals = new ArrayList<>();
-	public User(UUID userId, String userName, String phoneNumber, String emailAddress) {
-		this.userId = userId;
-		this.userName = userName;
-		this.phoneNumber = phoneNumber;
-		this.emailAddress = emailAddress;
-	}
-	
-	public UUID getUserId() {
-		return userId;
-	}
-	
-	public String getUserName() {
-		return userName;
-	}
-	
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-	
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
+    private final UUID userId;
+    private final String userName;
+    private String phoneNumber;
+    private String emailAddress;
+    private Date latestLocationTimestamp;
+    private List<VisitedLocation> visitedLocations = new ArrayList<>();
+    private List<UserReward> userRewards = new ArrayList<>();
+    private UserPreferences userPreferences = new UserPreferences();
+    private List<Provider> tripDeals = new ArrayList<>();
 
-	public void setEmailAddress(String emailAddress) {
-		this.emailAddress = emailAddress;
-	}
-	
-	public String getEmailAddress() {
-		return emailAddress;
-	}
-	
-	public void setLatestLocationTimestamp(Date latestLocationTimestamp) {
-		this.latestLocationTimestamp = latestLocationTimestamp;
-	}
-	
-	public Date getLatestLocationTimestamp() {
-		return latestLocationTimestamp;
-	}
-	
-	public void addToVisitedLocations(VisitedLocation visitedLocation) {
-		visitedLocations.add(visitedLocation);
-	}
-	
-	public List<VisitedLocation> getVisitedLocations() {
-		return visitedLocations;
-	}
-	
-	public void clearVisitedLocations() {
-		visitedLocations.clear();
-	}
-	
-	public void addUserReward(UserReward userReward) {
-		if(userRewards.stream().filter(r -> !r.attraction.attractionName.equals(userReward.attraction)).count() == 0) {
-			userRewards.add(userReward);
-		}
-	}
-	
-	public List<UserReward> getUserRewards() {
-		return userRewards;
-	}
-	
-	public UserPreferences getUserPreferences() {
-		return userPreferences;
-	}
-	
-	public void setUserPreferences(UserPreferences userPreferences) {
-		this.userPreferences = userPreferences;
-	}
+    /**
+     * Class constructor.
+     *
+     * @param userId
+     * @param userName
+     * @param phoneNumber
+     * @param emailAddress
+     */
+    public User(UUID userId, String userName, String phoneNumber,
+            String emailAddress)
+    {
+        this.userId = userId;
+        this.userName = userName;
+        this.phoneNumber = phoneNumber;
+        this.emailAddress = emailAddress;
+    }
 
-	public VisitedLocation getLastVisitedLocation() {
-		return visitedLocations.get(visitedLocations.size() - 1);
-	}
-	
-	public void setTripDeals(List<Provider> tripDeals) {
-		this.tripDeals = tripDeals;
-	}
-	
-	public List<Provider> getTripDeals() {
-		return tripDeals;
-	}
+    /**
+     * Getter of UserId.
+     *
+     * @return a UUID
+     */
+    public UUID getUserId() {
+        return userId;
+    }
+
+    /**
+     * Getter of UserName.
+     *
+     * @return a String
+     */
+    public String getUserName() {
+        return userName;
+    }
+
+    /**
+     * Setter of phoneNumber.
+     *
+     * @param phoneNumber
+     */
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    /**
+     * Getter of phoneNumber.
+     *
+     * @return a String
+     */
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    /**
+     * Setter of emailAddress.
+     *
+     * @param emailAddress
+     */
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    /**
+     * Getter of emailAddress.
+     *
+     * @return a String
+     */
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    /**
+     * Setter of latestLocationTimestamp.
+     *
+     * @param latestLocationTimestamp
+     */
+    public void setLatestLocationTimestamp(Date latestLocationTimestamp) {
+        this.latestLocationTimestamp = latestLocationTimestamp;
+    }
+
+    /**
+     * Getter of latestLocationTimestamp.
+     *
+     * @return a Date
+     */
+    public Date getLatestLocationTimestamp() {
+        return latestLocationTimestamp;
+    }
+
+    /**
+     * Adds the given visitedLocation to the visitedLocations List.
+     *
+     * @param visitedLocation
+     */
+    public void addToVisitedLocations(VisitedLocation visitedLocation) {
+        visitedLocations.add(visitedLocation);
+    }
+
+    /**
+     * Getter of the visitedLocations List.
+     *
+     * @return
+     */
+    public List<VisitedLocation> getVisitedLocations() {
+        return visitedLocations;
+    }
+
+    /**
+     * Removes all of the elements from the visitedLocations list.
+     */
+    public void clearVisitedLocations() {
+        visitedLocations.clear();
+    }
+
+    /**
+     * Adds the given userReward to the userRewards List.
+     *
+     * @param userReward
+     */
+    public void addUserReward(UserReward userReward) {
+        if (userRewards.stream().filter(
+                r -> !r.attraction.attractionName
+                        .equals(userReward.attraction.toString()))
+                .count() == 0) {
+            userRewards.add(userReward);
+        }
+    }
+
+    /**
+     * Getter of the userRewards List.
+     *
+     * @return a List<UserReward>
+     */
+    public List<UserReward> getUserRewards() {
+        return userRewards;
+    }
+
+    /**
+     * Getter of userPreferences.
+     *
+     * @return a UserPreferences object
+     */
+    public UserPreferences getUserPreferences() {
+        return userPreferences;
+    }
+
+    /**
+     * Setter of userPreferences.
+     *
+     * @param userPreferences
+     */
+    public void setUserPreferences(UserPreferences userPreferences) {
+        this.userPreferences = userPreferences;
+    }
+
+    /**
+     * Return the latest visitedLocation.
+     *
+     * @return a VisitedLocation object
+     */
+    public VisitedLocation getLastVisitedLocation() {
+        return visitedLocations.get(visitedLocations.size() - 1);
+    }
+
+    /**
+     * Setter of the tripDeals list.
+     *
+     * @param tripDeals
+     */
+    public void setTripDeals(List<Provider> tripDeals) {
+        this.tripDeals = tripDeals;
+    }
+
+    /**
+     * Getter of the tripDeals list.
+     *
+     * @return a List<Provider>
+     */
+    public List<Provider> getTripDeals() {
+        return tripDeals;
+    }
+
+    /**
+     * Serialization method.
+     */
+    @Override
+    public String toString() {
+        return "User [userId=" + userId + ", userName=" + userName
+                + ", phoneNumber=" + phoneNumber + ", emailAddress="
+                + emailAddress + ", latestLocationTimestamp="
+                + latestLocationTimestamp + ", visitedLocations="
+                + visitedLocations + ", userRewards=" + userRewards
+                + ", userPreferences=" + userPreferences
+                + ", tripDeals=" + tripDeals + "]";
+    }
 
 }
