@@ -207,17 +207,23 @@ public class User {
         return tripDeals;
     }
 
+    private String result = "";
+
     /**
      * Serialization method.
      */
     @Override
     public String toString() {
+        visitedLocations
+                .forEach(l -> this.result += " {lat=" + l.location.latitude
+                        + ", long=" + l.location.longitude + "}");
         return "User [userId=" + userId + ", userName=" + userName
                 + ", phoneNumber=" + phoneNumber + ", emailAddress="
                 + emailAddress + ", latestLocationTimestamp="
-                + latestLocationTimestamp + ", visitedLocations="
-                + visitedLocations + ", userRewards=" + userRewards
-                + ", userPreferences=" + userPreferences
+                + latestLocationTimestamp + ", visitedLocations= ["
+                + result + "], userRewards="
+                + userRewards.toString()
+                + ", userPreferences=" + userPreferences.toString()
                 + ", tripDeals=" + tripDeals + "]";
     }
 
