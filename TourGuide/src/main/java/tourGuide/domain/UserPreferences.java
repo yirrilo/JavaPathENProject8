@@ -1,79 +1,202 @@
-package tourGuide.user;
+package tourGuide.domain;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 
 import org.javamoney.moneta.Money;
 
-
+/**
+ * This domain class is used to store all user's preferences.
+ *
+ * @author TripMaster
+ * @author Thierry Schreiner
+ */
 public class UserPreferences {
-	
-	private int attractionProximity = Integer.MAX_VALUE;
-	private CurrencyUnit currency = Monetary.getCurrency("USD");
-	private Money lowerPricePoint = Money.of(0, currency);
-	private Money highPricePoint = Money.of(Integer.MAX_VALUE, currency);
-	private int tripDuration = 1;
-	private int ticketQuantity = 1;
-	private int numberOfAdults = 1;
-	private int numberOfChildren = 0;
-	
-	public UserPreferences() {
-	}
-	
-	public void setAttractionProximity(int attractionProximity) {
-		this.attractionProximity = attractionProximity;
-	}
-	
-	public int getAttractionProximity() {
-		return attractionProximity;
-	}
-	
-	public Money getLowerPricePoint() {
-		return lowerPricePoint;
-	}
 
-	public void setLowerPricePoint(Money lowerPricePoint) {
-		this.lowerPricePoint = lowerPricePoint;
-	}
+    /**
+     * The radius of the area where attractions is considered as nearby by the
+     * user.
+     */
+    private int attractionProximity = Integer.MAX_VALUE;
 
-	public Money getHighPricePoint() {
-		return highPricePoint;
-	}
+    /**
+     * Attribute that defines US Dollar as used currency of the application.
+     */
+    private CurrencyUnit currency = Monetary.getCurrency("USD");
 
-	public void setHighPricePoint(Money highPricePoint) {
-		this.highPricePoint = highPricePoint;
-	}
-	
-	public int getTripDuration() {
-		return tripDuration;
-	}
+    /**
+     * The minimum price value of a TripDeal.
+     */
+    private Money lowerPricePoint = Money.of(0, currency);
 
-	public void setTripDuration(int tripDuration) {
-		this.tripDuration = tripDuration;
-	}
+    /**
+     * The maximum price value of a TripDeal.
+     */
+    private Money highPricePoint = Money.of(Integer.MAX_VALUE, currency);
 
-	public int getTicketQuantity() {
-		return ticketQuantity;
-	}
+    /**
+     * The favorite duration of trip the user is looking for.
+     */
+    private int tripDuration = 1;
 
-	public void setTicketQuantity(int ticketQuantity) {
-		this.ticketQuantity = ticketQuantity;
-	}
-	
-	public int getNumberOfAdults() {
-		return numberOfAdults;
-	}
+    /**
+     * The quantity of ticket.
+     */
+    private int ticketQuantity = 1;
 
-	public void setNumberOfAdults(int numberOfAdults) {
-		this.numberOfAdults = numberOfAdults;
-	}
+    /**
+     * The number of adults that will participate to a trip.
+     */
+    private int numberOfAdults = 1;
 
-	public int getNumberOfChildren() {
-		return numberOfChildren;
-	}
+    /**
+     * The number of children that will participate to a trip.
+     */
+    private int numberOfChildren = 0;
 
-	public void setNumberOfChildren(int numberOfChildren) {
-		this.numberOfChildren = numberOfChildren;
-	}
+    /**
+     * Empty class constructor
+     */
+    public UserPreferences() {
+    }
+
+    /**
+     * Setter of attractionProximity.
+     *
+     * @param attractionProximity
+     */
+    public void setAttractionProximity(int attractionProximity) {
+        this.attractionProximity = attractionProximity;
+    }
+
+    /**
+     * Getter of attractionProximity.
+     *
+     * @return an int
+     */
+    public int getAttractionProximity() {
+        return attractionProximity;
+    }
+
+    /**
+     * Getter of lowerPricePoint.
+     *
+     * @return a Money object
+     */
+    public Money getLowerPricePoint() {
+        return lowerPricePoint;
+    }
+
+    /**
+     * Setter of lowerPricePoint.
+     *
+     * @param lowerPricePoint
+     */
+    public void setLowerPricePoint(Money lowerPricePoint) {
+        this.lowerPricePoint = lowerPricePoint;
+    }
+
+    /**
+     * Getter of highPricePoint.
+     *
+     * @return a Money object
+     */
+    public Money getHighPricePoint() {
+        return highPricePoint;
+    }
+
+    /**
+     * Setter of highPricePoint.
+     *
+     * @param highPricePoint
+     */
+    public void setHighPricePoint(Money highPricePoint) {
+        this.highPricePoint = highPricePoint;
+    }
+
+    /**
+     * Getter of tripDuration.
+     *
+     * @return an int
+     */
+    public int getTripDuration() {
+        return tripDuration;
+    }
+
+    /**
+     * Setter of tripDuration.
+     *
+     * @param tripDuration
+     */
+    public void setTripDuration(int tripDuration) {
+        this.tripDuration = tripDuration;
+    }
+
+    /**
+     * Getter of ticketQuantity.
+     *
+     * @return
+     */
+    public int getTicketQuantity() {
+        return ticketQuantity;
+    }
+
+    /**
+     * Setter of ticketQuantity.
+     *
+     * @param ticketQuantity
+     */
+    public void setTicketQuantity(int ticketQuantity) {
+        this.ticketQuantity = ticketQuantity;
+    }
+
+    /**
+     * Getter of numberOfAdults.
+     *
+     * @return an int
+     */
+    public int getNumberOfAdults() {
+        return numberOfAdults;
+    }
+
+    /**
+     * Setter of numberOfAdults.
+     * 
+     * @param numberOfAdults
+     */
+    public void setNumberOfAdults(int numberOfAdults) {
+        this.numberOfAdults = numberOfAdults;
+    }
+
+    /**
+     * Getter of numberOfChildren.
+     *
+     * @return an int
+     */
+    public int getNumberOfChildren() {
+        return numberOfChildren;
+    }
+
+    /**
+     * Setter of numberOfChildren.
+     * 
+     * @param numberOfChildren
+     */
+    public void setNumberOfChildren(int numberOfChildren) {
+        this.numberOfChildren = numberOfChildren;
+    }
+
+    /**
+     * Serialization method.
+     */
+    @Override
+    public String toString() {
+        return "UserPreferences [attractionProximity=" + attractionProximity
+                + ", currency=" + currency + ", lowerPricePoint="
+                + lowerPricePoint + ", highPricePoint=" + highPricePoint
+                + ", tripDuration=" + tripDuration + ", ticketQuantity="
+                + ticketQuantity + ", numberOfAdults=" + numberOfAdults
+                + ", numberOfChildren=" + numberOfChildren + "]";
+    }
 
 }
