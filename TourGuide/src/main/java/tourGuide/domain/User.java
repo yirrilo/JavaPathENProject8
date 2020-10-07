@@ -207,7 +207,11 @@ public class User {
         return tripDeals;
     }
 
-    private String result = "";
+    /**
+     * Used by the following toString method for the concatenation of the
+     * visitedLocations List.
+     */
+    private String serializedVisitedLocations = "";
 
     /**
      * Serialization method.
@@ -215,13 +219,15 @@ public class User {
     @Override
     public String toString() {
         visitedLocations
-                .forEach(l -> this.result += " {lat=" + l.location.latitude
+                .forEach(l -> this.serializedVisitedLocations += " {lat="
+                        + l.location.latitude
                         + ", long=" + l.location.longitude + "}");
+
         return "User [userId=" + userId + ", userName=" + userName
                 + ", phoneNumber=" + phoneNumber + ", emailAddress="
                 + emailAddress + ", latestLocationTimestamp="
                 + latestLocationTimestamp + ", visitedLocations= ["
-                + result + "], userRewards="
+                + serializedVisitedLocations + "], userRewards="
                 + userRewards.toString()
                 + ", userPreferences=" + userPreferences.toString()
                 + ", tripDeals=" + tripDeals + "]";
