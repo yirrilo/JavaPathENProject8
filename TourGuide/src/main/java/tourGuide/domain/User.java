@@ -145,12 +145,7 @@ public class User {
      * @param userReward
      */
     public void addUserReward(UserReward userReward) {
-        if (userRewards.stream().filter(
-                r -> !r.attraction.attractionName
-                        .equals(userReward.attraction.toString()))
-                .count() == 0) {
-            userRewards.add(userReward);
-        }
+        userRewards.add(userReward);
     }
 
     /**
@@ -221,7 +216,9 @@ public class User {
         visitedLocations
                 .forEach(l -> this.serializedVisitedLocations += " {lat="
                         + l.location.latitude
-                        + ", long=" + l.location.longitude + "}");
+                        + ", long=" + l.location.longitude + ", "
+                        + l.timeVisited.toString()
+                        + "}");
 
         return "User [userId=" + userId + ", userName=" + userName
                 + ", phoneNumber=" + phoneNumber + ", emailAddress="
