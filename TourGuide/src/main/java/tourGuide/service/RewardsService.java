@@ -1,8 +1,9 @@
 package tourGuide.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Service;
 
@@ -65,33 +66,31 @@ public class RewardsService {
      * @param user
      * @return a CompletableFuture<?>
      */
-    public CompletableFuture<?> calculateRewards(User user) {
+    public void calculateRewards(User user) {
 
         List<Attraction> attractions = gpsUtil.getAttractions();
 
-        List<CompletableFuture<?>> futuresList = new ArrayList<>();
-        futuresList.add(CompletableFuture
-                .runAsync(() -> user.getVisitedLocations().forEach(vl -> {
-                    attractions.stream()
-                            .filter(a -> nearAttraction(vl, a))
-                            .forEach(a -> {
-                                if (user.getUserRewards().stream().noneMatch(
-                                        r -> r.attraction.attractionName
-                                                .equals(a.attractionName))) {
-                                    System.out.println("noneMatch");
-                                    user.addUserReward(new UserReward(vl, a,
-                                            getRewardPoints(a, user)));
-                                    System.out
-                                            .println(user.getUserName() + vl + a
-                                                    + user.getUserRewards()
-                                                            .toArray()
-                                                            .toString());
-                                }
-                            });
-                })));
-
-        return CompletableFuture
-                .allOf(futuresList.stream().toArray(CompletableFuture[]::new));
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(() -> user.getVisitedLocations().forEach(vl -> {
+            attractions.stream()
+                    .filter(a -> nearAttraction(vl, a))
+                    .forEach(a -> {
+                        if (user.getUserRewards().stream().noneMatch(
+                                r -> r.attraction.attractionName
+                                        .equals(a.attractionName))) {
+                            user.addUserReward(new UserReward(vl, a,
+                                    getRewardPoints(a, user)));
+                        }
+                    });
+        }));
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(5000, TimeUnit.MILLISECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+        }
     }
 
     /**
@@ -119,6 +118,10 @@ public class RewardsService {
      */
     private boolean nearAttraction(VisitedLocation visitedLocation,
             Attraction attraction) {
+        /*
+         * System.out.println(getDistance(attraction,
+         * visitedLocation.location));
+         */
         return !(getDistance(attraction,
                 visitedLocation.location) > proximityBuffer);
     }
