@@ -2,7 +2,7 @@ package tourGuide.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -154,22 +154,23 @@ public class TourGuideService {
     }
 
     /**
-     * Get the list of nearby attraction.
+     * Get the list of the five closest attractions.
      *
      * @param visitedLocation
      * @return a List<Attraction>
      */
     public List<Attraction> getNearByAttractions(
             VisitedLocation visitedLocation) {
-        List<Attraction> nearbyAttractions = new ArrayList<>();
-        for (Attraction attraction : gpsUtil.getAttractions()) {
-            if (rewardsService.isWithinAttractionProximity(attraction,
-                    visitedLocation.location)) {
-                nearbyAttractions.add(attraction);
-            }
-        }
+        List<Attraction> attractions = gpsUtil.getAttractions();
 
-        return nearbyAttractions;
+        List<Attraction> nearbyFiveAttractions;
+
+        nearbyFiveAttractions = attractions.stream()
+                .sorted(Comparator.comparingDouble(a -> rewardsService
+                        .getDistance(visitedLocation.location, a)))
+                .limit(5)
+                .collect(Collectors.toList());
+        return nearbyFiveAttractions;
     }
 
     /**
