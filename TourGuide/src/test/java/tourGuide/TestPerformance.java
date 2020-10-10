@@ -53,13 +53,13 @@ public class TestPerformance {
 
     // @Ignore
     @Test
-    public void highVolumeTrackLocation() {
+    public void highVolumeTrackLocation() throws InterruptedException {
         GpsUtil gpsUtil = new GpsUtil();
         RewardsService rewardsService = new RewardsService(gpsUtil,
                 new RewardCentral());
         // Users should be incremented up to 100,000, and test finishes within
         // 15 minutes
-        InternalTestHelper.setInternalUserNumber(100);
+        InternalTestHelper.setInternalUserNumber(10000);
         TourGuideService tourGuideService = new TourGuideService(gpsUtil,
                 rewardsService);
 
@@ -68,15 +68,30 @@ public class TestPerformance {
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        for (User user : allUsers) {
-            tourGuideService.trackUserLocation(user);
-        }
+        ExecutorService executorService = Executors.newFixedThreadPool(100);
+        CountDownLatch countDownLatch = new CountDownLatch(allUsers.size());
+        System.out.println(
+                "countDownLatch.getCount() = " + countDownLatch.getCount());
+        // WHEN
+        allUsers.forEach(u -> executorService
+                .submit(() -> {
+                    tourGuideService.trackUserLocation(u);
+                    System.out.println(
+                            u.getLastVisitedLocation().timeVisited.toString());
+                    countDownLatch.countDown();
+                    System.out.println(countDownLatch.getCount());
+                }));
+
+        countDownLatch.await();
+        executorService.shutdown();
         stopWatch.stop();
+
         tourGuideService.tracker.stopTracking();
 
         System.out.println("highVolumeTrackLocation: Time Elapsed: "
                 + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime())
                 + " seconds.");
+        // THEN
         assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS
                 .toSeconds(stopWatch.getTime()));
     }
@@ -90,7 +105,7 @@ public class TestPerformance {
 
         // Users should be incremented up to 100,000, and test finishes within
         // 20 minutes
-        InternalTestHelper.setInternalUserNumber(1000);
+        InternalTestHelper.setInternalUserNumber(10000);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         TourGuideService tourGuideService = new TourGuideService(gpsUtil,
@@ -103,19 +118,20 @@ public class TestPerformance {
                 "countDownLatch.getCount() = " + countDownLatch.getCount());
         // WHEN
         try {
-        allUsers.forEach(u -> executorService.submit(() -> {
-            u.addToVisitedLocations(
-                    new VisitedLocation(u.getUserId(), attraction, new Date()));
-            rewardsService.calculateRewards(u);
-            System.out.println(
-                    u.getEmailAddress() + " : " + u.getUserRewards().get(0));
-            assertTrue(u.getUserRewards().size() > 0);
-            countDownLatch.countDown();
-            System.out.println(countDownLatch.getCount());
-        }));
-        countDownLatch.await();
-        }
-        catch (Exception e) {
+            allUsers.forEach(u -> executorService.submit(() -> {
+                u.addToVisitedLocations(
+                        new VisitedLocation(u.getUserId(), attraction,
+                                new Date()));
+                rewardsService.calculateRewards(u);
+                System.out.println(
+                        u.getEmailAddress() + " : "
+                                + u.getUserRewards().get(0));
+                assertTrue(u.getUserRewards().size() > 0);
+                countDownLatch.countDown();
+                System.out.println(countDownLatch.getCount());
+            }));
+            countDownLatch.await();
+        } catch (Exception e) {
             System.out.println("An exception occured : " + e.getMessage());
         }
         executorService.shutdown();

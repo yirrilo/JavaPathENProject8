@@ -1,4 +1,4 @@
-package tourGuide;
+package tourGuide.unitTests;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
@@ -20,6 +21,7 @@ import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 
+@SpringJUnitConfig(value = RewardsService.class)
 public class TestRewardsService {
 
     static {
