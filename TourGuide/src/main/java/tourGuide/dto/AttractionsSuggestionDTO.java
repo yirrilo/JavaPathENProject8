@@ -4,7 +4,7 @@ import java.util.Map;
 
 import gpsUtil.location.Location;
 
-public class AttractionsSuggestion {
+public class AttractionsSuggestionDTO {
 
     /**
      * The latest position of the user.

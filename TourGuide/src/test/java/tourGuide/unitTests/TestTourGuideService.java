@@ -14,7 +14,7 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 import tourGuide.domain.User;
-import tourGuide.dto.AttractionsSuggestion;
+import tourGuide.dto.AttractionsSuggestionDTO;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
@@ -149,7 +149,7 @@ public class TestTourGuideService {
                 "jon@tourGuide.com");
         tourGuideService.trackUserLocation(user);
         // WHEN
-        AttractionsSuggestion suggestion = tourGuideService
+        AttractionsSuggestionDTO suggestion = tourGuideService
                 .getAttractionsSuggestion(user);
 
         tourGuideService.tracker.stopTracking();

@@ -23,7 +23,7 @@ import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import tourGuide.domain.User;
 import tourGuide.domain.UserReward;
-import tourGuide.dto.AttractionsSuggestion;
+import tourGuide.dto.AttractionsSuggestionDTO;
 import tourGuide.dto.NearbyAttractionDTO;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.tracker.Tracker;
@@ -182,8 +182,8 @@ public class TourGuideService {
      * @param user
      * @return
      */
-    public AttractionsSuggestion getAttractionsSuggestion(User user) {
-        AttractionsSuggestion suggestion = new AttractionsSuggestion();
+    public AttractionsSuggestionDTO getAttractionsSuggestion(User user) {
+        AttractionsSuggestionDTO suggestion = new AttractionsSuggestionDTO();
         suggestion.setUserLocation(user.getLastVisitedLocation().location);
         Map<String, NearbyAttractionDTO> suggestedAttractions = new HashMap<>();
         List<Attraction> attractionsList = getNearByAttractions(
