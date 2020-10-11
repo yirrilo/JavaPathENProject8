@@ -156,7 +156,8 @@ public class TestTourGuideService {
         // THEN
         assertThat(suggestion.getUserLocation())
                 .isEqualTo(user.getLastVisitedLocation().location);
-        assertThat(suggestion.getSuggestedAttraction().size()).isEqualTo(5);
+        assertThat(suggestion.getSuggestedAttraction().size())
+                .isEqualTo(TourGuideService.SIZE_OF_NEARBY_ATTRACTIONS_LIST);
     }
 
     public void getTripDeals() {

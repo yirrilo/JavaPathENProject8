@@ -17,6 +17,12 @@ public class AttractionsSuggestionDTO {
     private Map<String, NearbyAttractionDTO> suggestedAttractions;
 
     /**
+     * Empty class constructor.
+     */
+    public AttractionsSuggestionDTO() {
+    }
+
+    /**
      * Getter of userLocation.
      *
      * @return a Location (latitude and longitude)
@@ -53,6 +59,12 @@ public class AttractionsSuggestionDTO {
     public void setSuggestedAttractions(
             Map<String, NearbyAttractionDTO> suggestedAttractions) {
         this.suggestedAttractions = suggestedAttractions;
+    }
+
+    @Override
+    public String toString() {
+        return "AttractionsSuggestionDTO [userLocation=" + userLocation
+                + ", suggestedAttractions=" + suggestedAttractions + "]";
     }
 
 }

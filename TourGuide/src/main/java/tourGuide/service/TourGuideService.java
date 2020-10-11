@@ -8,7 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -185,21 +187,25 @@ public class TourGuideService {
     public AttractionsSuggestionDTO getAttractionsSuggestion(User user) {
         AttractionsSuggestionDTO suggestion = new AttractionsSuggestionDTO();
         suggestion.setUserLocation(user.getLastVisitedLocation().location);
-        Map<String, NearbyAttractionDTO> suggestedAttractions = new HashMap<>();
+        TreeMap<String, NearbyAttractionDTO> suggestedAttractions = new TreeMap<>();
         List<Attraction> attractionsList = getNearByAttractions(
                 user.getLastVisitedLocation());
+        final AtomicInteger indexHolder = new AtomicInteger(1);
         attractionsList.stream()
                 .sorted(Comparator.comparingDouble(a -> rewardsService
                         .getDistance(user.getLastVisitedLocation().location,
                                 a)))
                 .forEach(a -> {
+                    final int index = indexHolder.getAndIncrement();
                     suggestedAttractions.put(
-                            a.attractionName, new NearbyAttractionDTO(
+                            index + ". " + a.attractionName,
+                            new NearbyAttractionDTO(
                                     new Location(a.latitude, a.longitude),
                                     rewardsService.getDistance(a,
                                             user.getLastVisitedLocation().location),
                                     rewardsService.getRewardPoints(a, user)));
                 });
+
         suggestion.setSuggestedAttractions(suggestedAttractions);
 
         return suggestion;
@@ -223,6 +229,7 @@ public class TourGuideService {
                         .getDistance(visitedLocation.location, a)))
                 .limit(SIZE_OF_NEARBY_ATTRACTIONS_LIST)
                 .collect(Collectors.toList());
+
         return nearbyFiveAttractions;
     }
 
