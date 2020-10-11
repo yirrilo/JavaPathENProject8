@@ -11,6 +11,7 @@ import com.jsoniter.output.JsonStream;
 
 import gpsUtil.location.VisitedLocation;
 import tourGuide.domain.User;
+import tourGuide.dto.AttractionsSuggestionDTO;
 import tourGuide.service.TourGuideService;
 import tripPricer.Provider;
 
@@ -49,20 +50,25 @@ public class TourGuideController {
     }
 
     /**
-     * HTML GET request that returns a List of nearby Attractions: attractions
-     * localized in the proximity range defined by the RewardsService
-     * attractionProximityRange attribute, initially set to 200 miles.
+     * HTML GET request that get the n closest tourist attractions to the user,
+     * no matter how far away they are. The number n of attraction is defined by
+     * the SIZE_OF_NEARBY_ATTRACTIONS_LIST constant of TourGuideService.
      *
      * @param userName
-     * @return a String
+     * @return an AttractionsSuggestionDTO that contains the user location, and
+     *         a TreeMap with attractionName as String key and a
+     *         NearbyAttractionDTO as value. The attractionName is prefixed by a
+     *         index (1 to SIZE_OF_NEARBY_ATTRACTIONS_LIST constant) which was
+     *         set in relation with the distance, in order to sort the TreeMap
+     *         to display suggested attractions from the nearest to the farthest
+     *         The NearbyAttractionDTO contains the location (latitude,
+     *         longitude) of the attraction, its distance from user location,
+     *         and the reward points for its visit.
      * @see RewardsService
      */
     @GetMapping("/getNearbyAttractions")
-    public String getNearbyAttractions(@RequestParam String userName) {
-        // TODO: Change this method to no longer return a List of Attractions.
-        // Instead: Get the closest five tourist attractions to the user - no
-        // matter
-        // how far away they are.
+    public AttractionsSuggestionDTO getNearbyAttractions(
+            @RequestParam String userName) {
         // Return a new JSON object that contains:
         // Name of Tourist attraction,
         // Tourist attractions lat/long,
@@ -71,10 +77,7 @@ public class TourGuideController {
         // attractions.
         // The reward points for visiting each Attraction.
         // Note: Attraction reward points can be gathered from RewardsCentral
-        VisitedLocation visitedLocation = tourGuideService
-                .getUserLocation(getUser(userName));
-        return JsonStream.serialize(
-                tourGuideService.getNearByAttractions(visitedLocation));
+        return tourGuideService.getAttractionsSuggestion(getUser(userName));
     }
 
     /**
