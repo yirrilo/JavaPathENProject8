@@ -134,7 +134,7 @@ public class RewardsService {
      * @param user
      * @return an int: the count of reward points
      */
-    private int getRewardPoints(Attraction attraction, User user) {
+    protected int getRewardPoints(Attraction attraction, User user) {
         return rewardsCentral.getAttractionRewardPoints(attraction.attractionId,
                 user.getUserId());
     }

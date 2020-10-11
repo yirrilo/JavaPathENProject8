@@ -23,6 +23,8 @@ import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import tourGuide.domain.User;
 import tourGuide.domain.UserReward;
+import tourGuide.dto.AttractionsSuggestion;
+import tourGuide.dto.NearbyAttractionDTO;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.tracker.Tracker;
 import tripPricer.Provider;
@@ -172,6 +174,35 @@ public class TourGuideService {
         user.addToVisitedLocations(visitedLocation);
         rewardsService.calculateRewards(user);
         return visitedLocation;
+    }
+
+    /**
+     * 
+     *
+     * @param user
+     * @return
+     */
+    public AttractionsSuggestion getAttractionsSuggestion(User user) {
+        AttractionsSuggestion suggestion = new AttractionsSuggestion();
+        suggestion.setUserLocation(user.getLastVisitedLocation().location);
+        Map<String, NearbyAttractionDTO> suggestedAttractions = new HashMap<>();
+        List<Attraction> attractionsList = getNearByAttractions(
+                user.getLastVisitedLocation());
+        attractionsList.stream()
+                .sorted(Comparator.comparingDouble(a -> rewardsService
+                        .getDistance(user.getLastVisitedLocation().location,
+                                a)))
+                .forEach(a -> {
+                    suggestedAttractions.put(
+                            a.attractionName, new NearbyAttractionDTO(
+                                    new Location(a.latitude, a.longitude),
+                                    rewardsService.getDistance(a,
+                                            user.getLastVisitedLocation().location),
+                                    rewardsService.getRewardPoints(a, user)));
+                });
+        suggestion.setSuggestedAttractions(suggestedAttractions);
+
+        return suggestion;
     }
 
     /**
