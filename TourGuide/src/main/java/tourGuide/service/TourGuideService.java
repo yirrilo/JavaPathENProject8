@@ -14,6 +14,7 @@ import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import gpsUtil.GpsUtil;
@@ -36,12 +37,31 @@ import tripPricer.TripPricer;
  */
 @Service
 public class TourGuideService {
+    /**
+     * Create a SLF4J/LOG4J LOGGER instance.
+     */
     private Logger logger = LoggerFactory.getLogger(TourGuideService.class);
+    /**
+     * Create a GpsUtil object of the gpsUtil.jar library.
+     */
     private final GpsUtil gpsUtil;
+    /**
+     * Create an instance of RewardsService.
+     */
     private final RewardsService rewardsService;
+    /**
+     * Create and initialize an instance of TripPricer.
+     */
     private final TripPricer tripPricer = new TripPricer();
+    /**
+     * Create an instance of Tracker.
+     */
     public final Tracker tracker;
+    /**
+     * Create a testMode boolean instance initialized at true.
+     */
     boolean testMode = true;
+    public static final int SIZE_OF_NEARBY_ATTRACTIONS_LIST = 5;
 
     /**
      * Class constructor
@@ -49,6 +69,7 @@ public class TourGuideService {
      * @param gpsUtil
      * @param rewardsService
      */
+    @Autowired
     public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
         this.gpsUtil = gpsUtil;
         this.rewardsService = rewardsService;
@@ -154,7 +175,8 @@ public class TourGuideService {
     }
 
     /**
-     * Get the list of the five closest attractions.
+     * Get the list of the n closest attractions. The number n is defined by the
+     * SIZE_OF_NEARBY_ATTRACTIONS_LIST constant.
      *
      * @param visitedLocation
      * @return a List<Attraction>
@@ -168,7 +190,7 @@ public class TourGuideService {
         nearbyFiveAttractions = attractions.stream()
                 .sorted(Comparator.comparingDouble(a -> rewardsService
                         .getDistance(visitedLocation.location, a)))
-                .limit(5)
+                .limit(SIZE_OF_NEARBY_ATTRACTIONS_LIST)
                 .collect(Collectors.toList());
         return nearbyFiveAttractions;
     }
