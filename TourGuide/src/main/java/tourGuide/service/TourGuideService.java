@@ -40,7 +40,7 @@ import tripPricer.TripPricer;
  * @author Thierry Schreiner
  */
 @Service
-public class TourGuideService {
+public class TourGuideService implements ITourGuideService {
     /**
      * Create a SLF4J/LOG4J LOGGER instance.
      */
@@ -48,11 +48,11 @@ public class TourGuideService {
     /**
      * Create a GpsUtil object of the gpsUtil.jar library.
      */
-    private final GpsUtil gpsUtil;
+    public GpsUtil gpsUtil;
     /**
      * Create an instance of RewardsService.
      */
-    private final RewardsService rewardsService;
+    public IRewardsService rewardsService;
     /**
      * Create and initialize an instance of TripPricer.
      */
@@ -65,7 +65,6 @@ public class TourGuideService {
      * Create a testMode boolean instance initialized at true.
      */
     boolean testMode = true;
-    public static final int SIZE_OF_NEARBY_ATTRACTIONS_LIST = 5;
 
     /**
      * Class constructor
@@ -73,8 +72,8 @@ public class TourGuideService {
      * @param gpsUtil
      * @param rewardsService
      */
-    @Autowired
-    public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
+    //@Autowired
+    public TourGuideService(GpsUtil gpsUtil, IRewardsService rewardsService) {
         this.gpsUtil = gpsUtil;
         this.rewardsService = rewardsService;
 
@@ -94,6 +93,7 @@ public class TourGuideService {
      * @param user
      * @return a List<UserReward>
      */
+    @Override
     public List<UserReward> getUserRewards(User user) {
         return user.getUserRewards();
     }
@@ -106,6 +106,7 @@ public class TourGuideService {
      * @param user
      * @return a VisitedLocation
      */
+    @Override
     public VisitedLocation getUserLocation(User user) {
         VisitedLocation visitedLocation = (user.getVisitedLocations()
                 .size() > 0) ? user.getLastVisitedLocation()
@@ -119,6 +120,7 @@ public class TourGuideService {
      * @param userName
      * @return
      */
+    @Override
     public User getUser(String userName) {
         return internalUserMap.get(userName);
     }
@@ -128,6 +130,7 @@ public class TourGuideService {
      *
      * @return
      */
+    @Override
     public List<User> getAllUsers() {
         return internalUserMap.values().stream().collect(Collectors.toList());
     }
@@ -138,6 +141,7 @@ public class TourGuideService {
      *
      * @param user
      */
+    @Override
     public void addUser(User user) {
         if (!internalUserMap.containsKey(user.getUserName())) {
             internalUserMap.put(user.getUserName(), user);
@@ -151,6 +155,7 @@ public class TourGuideService {
      * @param user
      * @return a List<Provider>
      */
+    @Override
     public List<Provider> getTripDeals(User user) {
         int cumulatativeRewardPoints = user.getUserRewards().stream()
                 .mapToInt(i -> i.getRewardPoints()).sum();
@@ -170,6 +175,7 @@ public class TourGuideService {
      * @param user
      * @return
      */
+    @Override
     public VisitedLocation trackUserLocation(User user) {
         VisitedLocation visitedLocation = gpsUtil
                 .getUserLocation(user.getUserId());
@@ -179,11 +185,24 @@ public class TourGuideService {
     }
 
     /**
-     * 
+     * This method build the requested Data Transfer Object from the list of the
+     * closest tourist attractions to the user that is returned by the
+     * getNearByAttractions sub method.
      *
      * @param user
-     * @return
+     * @return an AttractionsSuggestionDTO that contains the user location, and
+     *         a TreeMap with attractionName as String key and a
+     *         NearbyAttractionDTO as value. The attractionName is prefixed by a
+     *         index (1 to SIZE_OF_NEARBY_ATTRACTIONS_LIST constant) which was
+     *         set in relation with the distance, in order to sort the TreeMap
+     *         to display suggested attractions from the nearest to the farthest
+     *         The NearbyAttractionDTO contains the location (latitude,
+     *         longitude) of the attraction, its distance from user location,
+     *         and the reward points for its visit.
+     * @see AttractionsSuggestionDTO
+     * @see NearbyAttractionDTO
      */
+    @Override
     public AttractionsSuggestionDTO getAttractionsSuggestion(User user) {
         AttractionsSuggestionDTO suggestion = new AttractionsSuggestionDTO();
         suggestion.setUserLocation(user.getLastVisitedLocation().location);
@@ -218,6 +237,7 @@ public class TourGuideService {
      * @param visitedLocation
      * @return a List<Attraction>
      */
+    @Override
     public List<Attraction> getNearByAttractions(
             VisitedLocation visitedLocation) {
         List<Attraction> attractions = gpsUtil.getAttractions();
@@ -229,8 +249,14 @@ public class TourGuideService {
                         .getDistance(visitedLocation.location, a)))
                 .limit(SIZE_OF_NEARBY_ATTRACTIONS_LIST)
                 .collect(Collectors.toList());
-
-        return nearbyFiveAttractions;
+System.out.println(attractions.toString());
+System.out.println(attractions.get(0).attractionName);  
+System.out.println(attractions.get(1).attractionName);  
+System.out.println(attractions.get(2).attractionName);  
+System.out.println(attractions.get(3).attractionName);  
+System.out.println(attractions.get(4).attractionName);  
+System.out.println(attractions.get(5).attractionName);  
+return nearbyFiveAttractions;
     }
 
     /**

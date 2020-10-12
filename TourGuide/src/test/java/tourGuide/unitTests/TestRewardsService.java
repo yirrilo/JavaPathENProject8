@@ -18,6 +18,7 @@ import rewardCentral.RewardCentral;
 import tourGuide.domain.User;
 import tourGuide.domain.UserReward;
 import tourGuide.helper.InternalTestHelper;
+import tourGuide.service.IRewardsService;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 
@@ -49,7 +50,7 @@ public class TestRewardsService {
 	@Test
 	public void isWithinAttractionProximity() {
 		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+		IRewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		Attraction attraction = gpsUtil.getAttractions().get(0);
 		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));
 	}

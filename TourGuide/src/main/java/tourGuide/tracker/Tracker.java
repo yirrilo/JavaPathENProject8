@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import tourGuide.domain.User;
-import tourGuide.service.TourGuideService;
+import tourGuide.service.ITourGuideService;
 
 /**
  * 
@@ -24,7 +24,7 @@ public class Tracker extends Thread {
             .toSeconds(5);
     private final ExecutorService executorService = Executors
             .newSingleThreadExecutor();
-    private final TourGuideService tourGuideService;
+    private final ITourGuideService tourGuideService;
     private boolean stop = false;
 
     /**
@@ -32,9 +32,8 @@ public class Tracker extends Thread {
      *
      * @param tourGuideService
      */
-    public Tracker(TourGuideService tourGuideService) {
+    public Tracker(ITourGuideService tourGuideService) {
         this.tourGuideService = tourGuideService;
-
         executorService.submit(this);
     }
 

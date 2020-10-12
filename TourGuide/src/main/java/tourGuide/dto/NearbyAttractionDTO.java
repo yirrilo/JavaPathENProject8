@@ -1,7 +1,6 @@
 package tourGuide.dto;
 
 import gpsUtil.location.Location;
-import tourGuide.domain.UserReward;
 
 public class NearbyAttractionDTO {
 

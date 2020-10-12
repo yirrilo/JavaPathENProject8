@@ -20,6 +20,7 @@ import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 import tourGuide.domain.User;
 import tourGuide.helper.InternalTestHelper;
+import tourGuide.service.ITourGuideService;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 
@@ -108,7 +109,7 @@ public class TestPerformance {
         InternalTestHelper.setInternalUserNumber(10000);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        TourGuideService tourGuideService = new TourGuideService(gpsUtil,
+        ITourGuideService tourGuideService = new TourGuideService(gpsUtil,
                 rewardsService);
         Attraction attraction = gpsUtil.getAttractions().get(0);
         List<User> allUsers = tourGuideService.getAllUsers();

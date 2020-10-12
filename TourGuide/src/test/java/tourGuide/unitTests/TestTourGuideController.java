@@ -23,9 +23,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import org.mockito.Mock;
 
+import gpsUtil.GpsUtil;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import tourGuide.domain.User;
+import tourGuide.service.IRewardsService;
+import tourGuide.service.ITourGuideService;
+import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 import java.util.List;
 import java.util.Locale;
@@ -46,10 +50,17 @@ public class TestTourGuideController {
     private MockMvc mvc;
 
     @Mock
-    TourGuideService tourGuideService;
+    IRewardsService rewardsService;
 
     @Mock
-    User userMocked;
+    User user;
+
+    @Mock
+    GpsUtil gpsUtil;
+
+    @Mock
+    ITourGuideService tourGuideService = new TourGuideService(gpsUtil,
+            rewardsService);
 
     @BeforeEach
     public void setup() {
@@ -62,24 +73,25 @@ public class TestTourGuideController {
 
     // GetMapping("/getLocation")
     @Test
-    public void when_thenReturnLocation() throws Exception {
+    public void whenGetLocation_thenReturnLocation() throws Exception {
         // GIVEN
         User givenUser = new User(null, "Name", "06.07.08.09.10",
                 "user@mail.tourguide.com");
-        List<VisitedLocation> visitedLocations = new ArrayList<VisitedLocation>();
+        //List<VisitedLocation> visitedLocations = new ArrayList<VisitedLocation>();
         VisitedLocation visitedLocation = new VisitedLocation(
                 givenUser.getUserId(), new Location(20.04058776650764d,
                         51.29758469836821d),
                 Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC)));
-        visitedLocations.add(visitedLocation);
-        given(tourGuideService.getUser("Name"))
+        //user.addToVisitedLocations(visitedLocation);
+        
+        /*given(tourGuideService.getUser("Name"))
                 .willReturn(givenUser);
-        given(userMocked.getVisitedLocations())
+        given(user.getVisitedLocations())
                 .willReturn(visitedLocations);
-        given(userMocked.getLastVisitedLocation())
+        given(user.getLastVisitedLocation())
                 .willReturn(visitedLocation);
         given(tourGuideService.trackUserLocation(givenUser))
-                .willReturn(visitedLocation);
+                .willReturn(visitedLocation);*/
         given(tourGuideService.getUserLocation(givenUser))
                 .willReturn(visitedLocation);
         // WHEN

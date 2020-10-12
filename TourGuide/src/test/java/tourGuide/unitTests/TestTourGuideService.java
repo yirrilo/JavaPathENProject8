@@ -2,20 +2,26 @@ package tourGuide.unitTests;
 
 import static org.junit.Assert.assertEquals;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
+import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 import tourGuide.domain.User;
 import tourGuide.dto.AttractionsSuggestionDTO;
 import tourGuide.helper.InternalTestHelper;
+import tourGuide.service.ITourGuideService;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 import tripPricer.Provider;
@@ -23,8 +29,33 @@ import tripPricer.Provider;
 @SpringJUnitConfig(value = TourGuideService.class)
 public class TestTourGuideService {
 
+    @Mock
+    GpsUtil gpsUtil;
+    
+    @Mock
+    RewardsService rewardsService;
+    
+    TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
+    
+    static List<Attraction> attractions = new ArrayList<>();
     static {
         Locale.setDefault(Locale.US);
+        attractions.add(new Attraction("Tour Eiffel", "Paris", "France",
+                48.858482d, 2.294426d));
+        attractions.add(new Attraction("Futuroscope", "Chasseneuil-du-Poitou",
+                "France", 46.669752d, 0.368955d));
+        attractions.add(new Attraction("Notre Dame", "Paris", "France",
+                48.853208d, 2.348640d));
+        attractions.add(new Attraction("Musée Automobile", "Vernon", "France",
+                46.441387, 0.475771));
+        attractions.add(new Attraction("Clos Lucé", "Amboise", "France",
+                47.410445, 0.991830));
+        attractions.add(new Attraction("Eglise Saint-Jean-Baptiste",
+                "Saint-Jean-de-Luz", "France", 47.410445, 0.991830));
+        attractions.add(new Attraction("La Rhune", "Ascain", "France",
+                43.309685, -1.635410));
+        attractions.add(new Attraction("Grand place", "Aras", "France",
+                50.292564, 2.781040));
     }
 
     @Test
@@ -123,15 +154,20 @@ public class TestTourGuideService {
                 rewardsService);
         User user = new User(UUID.randomUUID(), "jon", "000",
                 "jon@tourGuide.com");
-        VisitedLocation visitedLocation = tourGuideService
-                .trackUserLocation(user);
+        VisitedLocation visitedLocation = new VisitedLocation(user.getUserId(),
+                new Location(45d, 1d), new Date()
+                 );
+
+        //given(gpsUtil.getAttractions()).willReturn(attractions);
+        //given(gpsUtil.getUserLocation(user.getUserId())).willReturn(visitedLocation);
+        
         // WHEN
         List<Attraction> attractions = tourGuideService
                 .getNearByAttractions(visitedLocation);
 
         tourGuideService.tracker.stopTracking();
         // THEN
-        assertEquals(TourGuideService.SIZE_OF_NEARBY_ATTRACTIONS_LIST,
+        assertEquals(ITourGuideService.SIZE_OF_NEARBY_ATTRACTIONS_LIST,
                 attractions.size());
     }
 
@@ -157,7 +193,7 @@ public class TestTourGuideService {
         assertThat(suggestion.getUserLocation())
                 .isEqualTo(user.getLastVisitedLocation().location);
         assertThat(suggestion.getSuggestedAttraction().size())
-                .isEqualTo(TourGuideService.SIZE_OF_NEARBY_ATTRACTIONS_LIST);
+                .isEqualTo(ITourGuideService.SIZE_OF_NEARBY_ATTRACTIONS_LIST);
     }
 
     public void getTripDeals() {

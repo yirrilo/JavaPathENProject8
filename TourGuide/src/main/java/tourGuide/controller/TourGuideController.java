@@ -8,11 +8,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jsoniter.output.JsonStream;
-
 import gpsUtil.location.VisitedLocation;
 import tourGuide.domain.User;
 import tourGuide.dto.AttractionsSuggestionDTO;
-import tourGuide.service.TourGuideService;
+import tourGuide.service.ITourGuideService;
 import tripPricer.Provider;
 
 @RestController
@@ -23,7 +22,7 @@ public class TourGuideController {
      * created.
      */
     @Autowired
-    TourGuideService tourGuideService;
+    ITourGuideService tourGuideService;
 
     /**
      * HTML GET request that returns a welcome message.
@@ -52,7 +51,7 @@ public class TourGuideController {
     /**
      * HTML GET request that get the n closest tourist attractions to the user,
      * no matter how far away they are. The number n of attraction is defined by
-     * the SIZE_OF_NEARBY_ATTRACTIONS_LIST constant of TourGuideService.
+     * the SIZE_OF_NEARBY_ATTRACTIONS_LIST constant of ITourGuideService.
      *
      * @param userName
      * @return an AttractionsSuggestionDTO that contains the user location, and
@@ -64,20 +63,13 @@ public class TourGuideController {
      *         The NearbyAttractionDTO contains the location (latitude,
      *         longitude) of the attraction, its distance from user location,
      *         and the reward points for its visit.
-     * @see RewardsService
+     * @see AttractionsSuggestionDTO
+     * @see NearbyAttractionDTO
      */
     @GetMapping("/getNearbyAttractions")
     public AttractionsSuggestionDTO getNearbyAttractions(
             @RequestParam String userName) {
-        // Return a new JSON object that contains:
-        // Name of Tourist attraction,
-        // Tourist attractions lat/long,
-        // The user's location lat/long,
-        // The distance in miles between the user's location and each of the
-        // attractions.
-        // The reward points for visiting each Attraction.
-        // Note: Attraction reward points can be gathered from RewardsCentral
-        return tourGuideService.getAttractionsSuggestion(getUser(userName));
+       return tourGuideService.getAttractionsSuggestion(getUser(userName));
     }
 
     /**

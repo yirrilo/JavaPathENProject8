@@ -23,7 +23,7 @@ import tourGuide.domain.UserReward;
  * @author Thierry Schreiner
  */
 @Service
-public class RewardsService {
+public class RewardsService implements IRewardsService {
     private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 
     // proximity in miles
@@ -49,6 +49,7 @@ public class RewardsService {
      * 
      * @param proximityBuffer
      */
+    @Override
     public void setProximityBuffer(int proximityBuffer) {
         this.proximityBuffer = proximityBuffer;
     }
@@ -56,6 +57,7 @@ public class RewardsService {
     /**
      * Set proximityBuffer with default value.
      */
+    @Override
     public void setDefaultProximityBuffer() {
         proximityBuffer = defaultProximityBuffer;
     }
@@ -66,6 +68,7 @@ public class RewardsService {
      * @param user
      * @return a CompletableFuture<?>
      */
+    @Override
     public void calculateRewards(User user) {
 
         List<Attraction> attractions = gpsUtil.getAttractions();
@@ -102,6 +105,7 @@ public class RewardsService {
      * @param location
      * @return a boolean
      */
+    @Override
     public boolean isWithinAttractionProximity(Attraction attraction,
             Location location) {
         return !(getDistance(attraction, location) > attractionProximityRange);
@@ -134,7 +138,7 @@ public class RewardsService {
      * @param user
      * @return an int: the count of reward points
      */
-    protected int getRewardPoints(Attraction attraction, User user) {
+    public int getRewardPoints(Attraction attraction, User user) {
         return rewardsCentral.getAttractionRewardPoints(attraction.attractionId,
                 user.getUserId());
     }
@@ -146,6 +150,7 @@ public class RewardsService {
      * @param loc2
      * @return a double: the distance in statute miles
      */
+    @Override
     public double getDistance(Location loc1, Location loc2) {
         double lat1 = Math.toRadians(loc1.latitude);
         double lon1 = Math.toRadians(loc1.longitude);
