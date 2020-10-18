@@ -9,8 +9,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-import org.junit.Test;
+import org.junit.Before;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import gpsUtil.GpsUtil;
@@ -35,6 +38,7 @@ public class TestTourGuideService {
     @Mock
     RewardsService rewardsService;
     
+    @InjectMocks
     TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
     
     static List<Attraction> attractions = new ArrayList<>();
@@ -58,6 +62,11 @@ public class TestTourGuideService {
                 50.292564, 2.781040));
     }
 
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
+    
     @Test
     public void givenAUser_whenGetUserLocation_thenReturnsHisVisitedLocation() {
         // GIVEN
@@ -174,12 +183,7 @@ public class TestTourGuideService {
     @Test
     public void givenAUser_whenGetSuggestions_thenReturnSuggestions() {
         // GIVEN
-        GpsUtil gpsUtil = new GpsUtil();
-        RewardsService rewardsService = new RewardsService(gpsUtil,
-                new RewardCentral());
         InternalTestHelper.setInternalUserNumber(0);
-        TourGuideService tourGuideService = new TourGuideService(gpsUtil,
-                rewardsService);
 
         User user = new User(UUID.randomUUID(), "jon", "000",
                 "jon@tourGuide.com");
